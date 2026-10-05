@@ -1,10 +1,9 @@
-package problem06.problem06;
+package problem07;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class WordCounter {
 
