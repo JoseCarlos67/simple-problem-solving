@@ -1,20 +1,22 @@
-import javax.swing.*;
+package problem05;
+
+import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class problem05 {
+  static String pathFile = "src/problem05/taskList.txt";
 
   public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
-    List<String> taskList = new ArrayList<>();
+    ArrayList<String> taskList = readFile();
 
     menu(scanner, taskList);
 
     scanner.close();
   }
 
-  private static void menu(Scanner scanner, List<String> taskList) {
+  private static void menu(Scanner scanner, ArrayList<String> taskList) {
     int action;
 
     do {
@@ -41,11 +43,10 @@ public class problem05 {
           showTasks(taskList);
           break;
       }
-
     }while (action != 0) ;
   }
 
-  private static void updateTask(Scanner scanner, List<String> taskList) {
+  private static void updateTask(Scanner scanner, ArrayList<String> taskList) {
     scanner.nextLine();
     System.out.println("Enter task name");
     String name = scanner.nextLine();
@@ -57,10 +58,11 @@ public class problem05 {
       System.out.println("Updated task name: ");
       String updatedName = scanner.nextLine();
       taskList.set(resultSearch, updatedName);
+      saveTaskList(taskList);
     }
   }
 
-  private static void deleteTask(Scanner scanner, List<String> taskList) {
+  private static void deleteTask(Scanner scanner, ArrayList<String> taskList) {
     scanner.nextLine();
     System.out.println("Enter task name");
     String name = scanner.nextLine();
@@ -71,29 +73,56 @@ public class problem05 {
       System.out.println("Invalid task name");
     else {
       taskList.remove(resultSearch);
+      saveTaskList(taskList);
     }
-
   }
 
-  private static void addTask(Scanner scanner, List<String> listTask) {
+  private static void addTask(Scanner scanner, ArrayList<String> listTask) {
     scanner.nextLine();
     System.out.print("Enter task name: ");
     String name = scanner.nextLine();
     listTask.add(name);
+    saveTaskList(listTask);
     System.out.println("Task added successfully");
   }
 
-  private static void showTasks(List<String> listTask) {
+  private static void showTasks(ArrayList<String> listTask) {
     for (String task : listTask) {
       System.out.println(task);
     }
   }
 
-  private static int searchTask(List<String> listTask, String name) {
+  private static int searchTask(ArrayList<String> listTask, String name) {
     if (listTask.contains(name))
       return listTask.indexOf(name);
     else
       return -1;
+  }
+
+  private static void saveTaskList(ArrayList<String> taskList) {
+    try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(pathFile))) {
+      for (String item : taskList) {
+        bufferedWriter.write(item);
+        bufferedWriter.newLine();
+      }
+    } catch (IOException e) {
+      System.out.println("Error: " + e.getMessage());
+    }
+  }
+
+  private static ArrayList<String> readFile() {
+    ArrayList<String> taskList = new ArrayList<>();
+
+    try (BufferedReader bufferedReader = new BufferedReader(new FileReader(pathFile))) {
+      String line;
+      while ((line = bufferedReader.readLine()) != null) {
+        taskList.add(line);
+      }
+    } catch (IOException e) {
+      System.out.println("Error: " + e.getMessage());
+    }
+
+    return taskList;
   }
 
 }
